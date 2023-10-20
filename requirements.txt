@@ -1,0 +1,10 @@
+jupyter
+numpy
+pandas
+seaborn
+matplotlib
+gym
+stable-baselines3
+shimmy>=0.2.1
+tqdm
+rich
