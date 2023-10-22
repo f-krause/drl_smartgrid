@@ -6,7 +6,7 @@ from src.microgrid import Microgrid
 
 
 class MicrogridEnv(gym.Env):
-    def __init__(self, data_dict, wind=False, wind_generator=True, alternative_cost=False):
+    def __init__(self, data_dict):
         """
         Params:
             data_dict: hourly environment data. Should contain the following
@@ -19,23 +19,12 @@ class MicrogridEnv(gym.Env):
                 used for the simulation (question 3)
         """
         # Initialize your Microgrid
-        self.alternative_cost = alternative_cost
-        self.microgrid = Microgrid(alternative_cost=alternative_cost)
+        self.microgrid = Microgrid()
         self.step_count = 0
         self.data_dict = data_dict  # hourly environment data
-        self.alternative_cost = alternative_cost
-        self.wind = wind
-        self.wind_generator = wind_generator
-        if self.wind and self.wind_generator:
-            print("WARNING parameter wind=True was set to False as wind_generator is already True")
-            self.wind = False
 
         # Get correct action space dimensions
-        actions = [2, 2, 2, 3, 2]  # action space for solar only
-        if self.wind:
-            actions = [2, 2, 2, 3, 3, 2, 2]
-        elif self.wind_generator:
-            actions = [2, 2, 2, 3, 3, 3, 2, 2, 2]
+        actions = [2, 2, 2, 3, 3, 3, 2, 2, 2]
 
         # Define the action space
         self.action_space = spaces.MultiDiscrete(actions)
@@ -53,38 +42,22 @@ class MicrogridEnv(gym.Env):
     def reset(self, **kwargs):
         self.step_count = 0
         # Reset the Microgrid to its initial state
-        self.microgrid = Microgrid(alternative_cost=self.alternative_cost)
+        self.microgrid = Microgrid()
         # Return the initial observation
         return self.get_observation()
 
     def get_action_dict(self, action):
-        # actions = [2, 2, 2, 3, 2] # TODO
         action_dict = {
             "purchased": action[0:2],
             "discharged": action[2],
             "solar": action[3],
-            "wind": 0,
-            "generator": 0,
-            "adjusting_status": [action[4]] + [0] * 2,  # wind and generator are always off (= 0)
-
+            "wind": action[4],
+            "generator": action[5],
+            "adjusting_status": action[6:9],
         }
-
-        if self.wind:
-            # actions = [2, 2, 2, 3, 3, 2, 2]
-            action_dict.update({"wind": action[4],
-                                "adjusting_status": list(action[5:7]) + [0]})  # generator always off (= 0)
-        elif self.wind_generator:
-            # actions = [2, 2, 2, 3, 3, 3, 2, 2, 2]
-            action_dict.update({"wind": action[4], "generator": action[5],
-                                "adjusting_status": action[6:9]})
-
         return action_dict
 
     def step(self, action):
-        # Split the flattened action into sub-actions
-        # adjusting_status = action[:3]
-        # Ensure that adjusting_status values are either 0 or 1
-        # adjusting_status = np.round(adjusting_status).astype(int)
         action_dict = self.get_action_dict(action)
 
         # Execute the chosen action on the Microgrid
@@ -103,7 +76,6 @@ class MicrogridEnv(gym.Env):
 
     def get_observation(self):
         # Extract relevant information from the Microgrid's state and return it as an observation (environment state)
-        # TODO scaling?
         return [self.microgrid.solar_irradiance, self.microgrid.wind_speed, self.microgrid.energy_price_utility_grid,
                 self.microgrid.energy_demand, self.microgrid.soc]
 
@@ -112,6 +84,7 @@ class MicrogridEnv(gym.Env):
         return -self.microgrid.cost_of_epoch()
 
     def render(self, mode='human'):
+        """Save environment and action information of each step"""
         mg = self.microgrid
 
         info = {
@@ -143,5 +116,4 @@ class MicrogridEnv(gym.Env):
             "wind_speed": mg.wind_speed,
             "energy_price_utility_grid": mg.energy_price_utility_grid,
         }
-
         return info

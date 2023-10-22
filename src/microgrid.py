@@ -16,8 +16,7 @@ class Microgrid(object):
                  actions_wind=0,
                  actions_generator=0,
                  actions_purchased=[0, 0],  # buy energy from utility grid for: [energy load, charge battery]
-                 actions_discharged=0,
-                 alternative_cost=False
+                 actions_discharged=0
                  ):
         # Environment
         self.energy_for_battery_bought = 0
@@ -31,7 +30,6 @@ class Microgrid(object):
         self.energy_price_utility_grid = energy_price_utility_grid
         self.operational_cost_battery = 0
         self.energy_purchased = 0
-        self.alternative_cost = alternative_cost
 
         # Actions
         self.actions_adjusting_status = self.get_actions_dict(actions_adjusting_status,
@@ -161,30 +159,7 @@ class Microgrid(object):
         return sell_back_energy
     
     def cost_of_epoch(self):
-        if self.alternative_cost:
-            energy_purchased = self.energy_for_battery_bought + self.energy_for_load_bought
-            
-            self.energy_purchased = 0.25 * energy_purchased**2 * self.energy_price_utility_grid + \
-                                    0.5 * energy_purchased * self.energy_price_utility_grid
-        else:
-            self.energy_purchased = (self.energy_for_battery_bought + self.energy_for_load_bought) \
-                   * self.energy_price_utility_grid
-        
+        self.energy_purchased = (self.energy_for_battery_bought + self.energy_for_load_bought) \
+               * self.energy_price_utility_grid
         punishment_costs = self.check_blackout()
         return self.energy_purchased + punishment_costs + self.operational_cost() - self.sell_back_reward()
-
-    def print_microgrid(self, file=None):
-        print("Microgrid working status [solar PV, wind turbine, generator]=", self.working_status, ", SOC =", self.soc,
-              file=file)
-        print("microgrid actions [solar PV, wind turbine, generator]=", self.actions_adjusting_status, file=file)
-        print("solar energy supporting [the energy load, charging battery, sold back]=", self.actions_solar, file=file)
-        print("wind energy supporting [the energy load, charging battery, sold back]=", self.actions_wind, file=file)
-        print("generator energy supporting [the energy load, charging battery, sold back]=", self.actions_generator,
-              file=file)
-        print("energy purchased from grid supporting [the energy load, charging battery]=", self.actions_purchased,
-              file=file)
-        print("energy discharged by the battery supporting the energy load =", self.actions_discharged, file=file)
-        print("solar irradiance =", self.solar_irradiance, file=file)
-        print("wind speed =", self.wind_speed, file=file)
-        print("Microgrid Energy Consumption =", self.energy_total, file=file)
-        print("Microgrid Operational Cost =", self.operational_cost())
