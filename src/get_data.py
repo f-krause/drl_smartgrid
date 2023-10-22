@@ -5,6 +5,9 @@ import os
 
 # NOTE: We assume here that all time series have the identical starting point and no NAs
 
+def get_data_dict_simple():
+    return pd.read_csv("data/demo_data.csv", index_col=0).to_dict(orient='list')
+
 def get_energy_demand_data(k=25, region="CA"):
     if isinstance(region, list):
         region = tuple(region)
