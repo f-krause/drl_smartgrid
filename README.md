@@ -1,25 +1,14 @@
-# Assignment 1 - IN5460
+# Reinforcement Learning Demo
 
-Felix Krause, Johannes Spieß, Sina Henning
+From a joint effort of Sina Henning, Felix Krause und Johannes Spieß 
 
-Mandatory assignment 1 for Artificial Intelligence for Energy Informatics.
-
-
-[**Assignment**](https://drive.google.com/file/d/1pIJbfPNUTzSqmtWR1NDfasgdQB9se5Tb/view) | Deadline 17.10.2023 kl 23:59
+Mandatory assignment 1 for Artificial Intelligence for Energy Informatics at UiO Autumn 2023.
 
 
 ## Setup
 ### Environment setup
 
-#### With conda
-```bash
-conda create --name ai4ei python=3.11
-conda activate ai4ei
-conda install -c conda-forge jupyter numpy pandas seaborn matplotlib
-pip install gym
-```
-
-#### With venv
+Create new environment "venv"
 ```shell
 python -m venv venv
 ```
@@ -27,11 +16,6 @@ python -m venv venv
 Activate env in bash:
 ```bash
 source venv/bin/activate
-```
-
-Activate env in PowerShell (Windows)
-```shell
-C:\Code\in5460-mex1\venv\Scripts\Activate.ps1
 ```
 
 Install packages in venv
@@ -45,16 +29,18 @@ python -m ipykernel install --user --name=venv
 ```
 
 ### Provide Datasets
-Put the following datasets into a folder "/data" in this repo
+There is already all data needed in the data/directory. 
+
+For full replication (and more freedom regarding the energy demand), put the following datasets into a folder "/data" in this repo
 * [SolarIrradiance.csv](https://drive.google.com/file/d/1SUjtybPtUzwSEDQoqXbMNijEeDi8QF8m/view)
 * [rate_consumption_charge.csv/electricity price](https://drive.google.com/file/d/1uxM9TC401TBwjcdxe3i7TAxSo9tPNWi1/view)
 * [WindSpeed.csv](https://drive.google.com/file/d/1X87VRm88-Tp2cs9zjmOB0R6wTxJl8QBf/view)
 
-Put the "BASE" profiles in a folder "/data/residential_load_data_base"
+And put the "BASE" profiles in a folder "/data/residential_load_data_base"
 * **[Residential load profiles](https://data.openei.org/files/153/RESIDENTIAL_LOAD_DATA_E_PLUS_OUTPUT.zip)**: Check out data source [here](https://data.openei.org/submissions/153)
 
 ## Run training
-Open the notebook ["notebooks/1_training.ipynb"](notebooks/1_training.ipynb).
+Open the notebook ["notebooks/1_training.ipynb"](notebooks/1_training.ipynb) and follow instructions.
 
 ## Analysis of results
 Open the notebook ["notebooks/2_result_viz.ipynb"](notebooks/2_result_viz.ipynb).
