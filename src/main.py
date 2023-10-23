@@ -3,7 +3,7 @@ from src.microgrid_env import MicrogridEnv
 
 
 def main():
-    #data_dict = get_data_dict(k=10, region="CA")
+    # data_dict = get_data_dict(k=10, region="CA")  # full
     data_dict = get_data_dict_simple()
 
     grid = MicrogridEnv(data_dict)
