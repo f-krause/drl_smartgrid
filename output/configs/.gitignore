@@ -1,1 +1,3 @@
 *.json
+
+!config_ppo_demo.json
