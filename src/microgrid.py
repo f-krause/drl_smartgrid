@@ -12,9 +12,9 @@ class Microgrid(object):
                  energy_price_utility_grid=0.6,  # rate consumption charge, should come from data
 
                  actions_adjusting_status=[0, 0, 0],
-                 actions_solar=0,  # energy  to support: energy load, charge battery or sell to utility grid
-                 actions_wind=0,
-                 actions_generator=0,
+                 actions_solar=0,  # energy to support: energy load (0), charge battery (1) or sell to utility grid (2)
+                 actions_wind=0,  # same as above
+                 actions_generator=0,  # same as above
                  actions_purchased=[0, 0],  # buy energy from utility grid for: [energy load, charge battery]
                  actions_discharged=0
                  ):

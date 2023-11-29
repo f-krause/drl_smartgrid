@@ -7,29 +7,34 @@ from src.microgrid import Microgrid
 
 class MicrogridEnv(gym.Env):
     def __init__(self, data_dict):
-        """
+        """Set up environment.
+
         Params:
-            data_dict: hourly environment data. Should contain the following
-                keys: "energy_demand", "solar_irradiance", "wind_speed", and
-                "rate_consumption_charge". Each key should map to a list value
-                containing the hourly data for that variable.
-            wind: indicator if solar and wind power should be used for the
-                simulation (question 2)
-            wind_generator: indicator if solar, wind and generator should be
-                used for the simulation (question 3)
+            data_dict: hourly environment data. Should contain the following keys: "energy_demand", "solar_irradiance",
+            "wind_speed", and "rate_consumption_charge". Each key should map to a list value containing the hourly
+            data for that variable.
         """
-        # Initialize your Microgrid
+        # Initialize the Microgrid
         self.microgrid = Microgrid()
         self.step_count = 0
-        self.data_dict = data_dict  # hourly environment data
+        self.data_dict = data_dict  # hourly data of solar irradiance, wind speed, energy price, energy demand
 
-        # Get correct action space dimensions
-        actions = [2, 2, 2, 3, 3, 3, 2, 2, 2]
+        # Define action space
+        actions = [2,  # purchase energy for load (yes/no)
+                   2,  # purchase energy to load battery (yes/no)
+                   2,  # discharge battery (yes/no)
+                   3,  # solar (support load, charge battery, sell to utility grid)
+                   3,  # wind (support load, charge battery, sell to utility grid)
+                   3,  # generator (support load, charge battery, sell to utility grid)
+                   2,  # use solar energy (on/off)
+                   2,  # use wind energy (on/off)
+                   2   # use generator energy (on/off)
+                   ]
 
         # Define the action space
         self.action_space = spaces.MultiDiscrete(actions)
 
-        # Define observation space
+        # Define observation space (i.e. environment state)
         self.observation_space = spaces.Box(low=np.array([0] * 4 + [soc_min]),
                                             high=np.array([10_000,  # solar irradiance
                                                            100,  # wind speed
@@ -40,13 +45,13 @@ class MicrogridEnv(gym.Env):
                                             dtype=np.float64)
 
     def reset(self, **kwargs):
+        """Needs to be defined for gym. Reset the environment to its initial state and return an initial observation."""
         self.step_count = 0
-        # Reset the Microgrid to its initial state
-        self.microgrid = Microgrid()
-        # Return the initial observation
-        return self.get_observation()
+        self.microgrid = Microgrid()  # Reset the Microgrid to its initial state
+        return self.get_observation()  # Return the initial observation
 
-    def get_action_dict(self, action):
+    @staticmethod
+    def get_action_dict(action):
         action_dict = {
             "purchased": action[0:2],
             "discharged": action[2],
@@ -57,31 +62,36 @@ class MicrogridEnv(gym.Env):
         }
         return action_dict
 
-    def step(self, action):
-        action_dict = self.get_action_dict(action)
-
-        # Execute the chosen action on the Microgrid
-        self.microgrid.transition(action_dict, self.data_dict, self.step_count)
-
-        # Calculate the reward based on your cost reduction goal
-        reward = self.compute_reward()
-
-        # Check if the episode is done (you can define a termination condition here)
-        self.step_count += 1
-        max_epochs = len(self.data_dict["wind_speed"])
-        done = self.step_count >= max_epochs  # You need to define when an episode is done
-
-        # Return the next observation, reward, done flag, and any additional info
-        return self.get_observation(), reward, done, {}
-
     def get_observation(self):
         # Extract relevant information from the Microgrid's state and return it as an observation (environment state)
         return [self.microgrid.solar_irradiance, self.microgrid.wind_speed, self.microgrid.energy_price_utility_grid,
                 self.microgrid.energy_demand, self.microgrid.soc]
 
     def compute_reward(self):
-        # negative costs as reward
+        # Negative costs as reward
         return -self.microgrid.cost_of_epoch()
+
+    def step(self, action):
+        """Needs to be defined for gym. Perform one step (= episode).
+
+        Params:
+            action: action chosen by agent to be performed in environment
+        """
+        action_dict = self.get_action_dict(action)
+
+        # Execute the chosen action on the Microgrid
+        self.microgrid.transition(action_dict, self.data_dict, self.step_count)
+
+        # Calculate the reward (i.e. negative costs of that episode)
+        reward = self.compute_reward()
+
+        # Check if the episode is done (termination condition)
+        self.step_count += 1
+        max_epochs = len(self.data_dict["wind_speed"])
+        done = self.step_count >= max_epochs
+
+        # Return the next observation, reward, done flag, and any additional info to gym
+        return self.get_observation(), reward, done, {}
 
     def render(self, mode='human'):
         """Save environment and action information of each step"""
