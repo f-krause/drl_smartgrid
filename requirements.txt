@@ -3,8 +3,8 @@ numpy
 pandas
 seaborn
 matplotlib
-gym
-stable-baselines3
+gym==0.26.2
+stable-baselines3==2.1.0
 shimmy>=0.2.1
-tqdm
+tqdm==4.66.1
 rich
