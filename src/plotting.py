@@ -28,7 +28,6 @@ def plot_demand_load(step_df, k=200):
     plt.rcParams['font.size'] = 12
 
     # Plotting energy demand and load for step_df
-    plt.subplot(1, 2, 1)
     plt.plot(step_df['energy_load'][:k], color='darkred', label='Energy load')
     plt.plot(step_df['energy_demand'][:k], color='darkgreen', label='Energy demand')
     plt.xlabel('Time ($h$)')
