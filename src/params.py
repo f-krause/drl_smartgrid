@@ -73,7 +73,7 @@ number_windturbine = 1
 # the number of wind turbine in the onsite generation system, N_w
 number_generators = 1
 # the number of generators, n_g
-rated_output_power_generator = 600  # original: 60 / 1000 before
+rated_output_power_generator = 60  # original: 60 / 1000 before
 # the rated output power of the generator in kWh, G_p
 
 # MANUALLY ADDED
