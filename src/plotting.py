@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 
 def plot_energy_produced(step_df):
-    plt.rcParams["figure.figsize"] = (10, 6)
+    plt.rcParams["figure.figsize"] = (8, 5)
     plt.rcParams['font.size'] = 12
 
     # Plotting energy produced
@@ -24,7 +24,7 @@ def plot_energy_produced(step_df):
 
 
 def plot_demand_load(step_df, k=200):
-    plt.rcParams["figure.figsize"] = (15, 6)
+    plt.rcParams["figure.figsize"] = (8, 5)
     plt.rcParams['font.size'] = 12
 
     # Plotting energy demand and load for step_df
@@ -40,8 +40,8 @@ def plot_demand_load(step_df, k=200):
     plt.show()
 
 
-def plot_solar_power(step_df, k=100):
-    plt.rcParams["figure.figsize"] = (15, 6)
+def plot_solar_power(step_df, k=200):
+    plt.rcParams["figure.figsize"] = (8, 5)
     plt.rcParams['font.size'] = 12
 
     # Plotting solar for step_df
