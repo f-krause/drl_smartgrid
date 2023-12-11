@@ -36,9 +36,9 @@ class MicrogridEnv(gym.Env):
 
         # Define observation space (i.e. environment state)
         self.observation_space = spaces.Box(low=np.array([0] * 4 + [soc_min]),
-                                            high=np.array([10_000,  # solar irradiance
-                                                           100,  # wind speed
-                                                           10,  # electricity price to sell for
+                                            high=np.array([10_000,  # solar irradiance (W/m^2)
+                                                           100,  # wind speed (m/s)
+                                                           10,  # electricity price to sell for ($/kWh)
                                                            10_000,  # energy demand in kWh
                                                            soc_max,  # battery status
                                                            ]),
