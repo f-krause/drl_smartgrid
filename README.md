@@ -55,3 +55,9 @@ Open the notebook ["notebooks/2_result_viz.ipynb"](notebooks/2_result_viz.ipynb)
 ## Conventions
 * The main unit used for energy is kWh
 * The used time frame is an hour
+
+
+## Possible future work
+In another iteration, one could try to improve the reward function, e.g.:
+- penalizing switching energy sources on that are not optimal (i.e. solar on although there is no solar irradience, e.g. during night)
+- including opportunity cost concept: negative reward proportional to "lost" money because a more expensive energy source was used than a cheap alternative (e.g. buying energy from grid although high solar irradience)
