@@ -1,8 +1,8 @@
 # Reinforcement Learning Demo
 
-From a joint effort of Sina Henning, Felix Krause und Johannes Spieß 
+From a joint effort of Sina Henning, Felix Krause and Johannes Spieß 
 
-Mandatory assignment 1 for Artificial Intelligence for Energy Informatics at UiO Autumn 2023.
+Mandatory assignment 1 for Artificial Intelligence for Energy Informatics at University of Oslo (UiO) Autumn 2023.
 
 
 ## Setup
