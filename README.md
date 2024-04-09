@@ -4,6 +4,7 @@ From a joint effort of Sina Henning, Felix Krause and Johannes Spieß
 
 Mandatory assignment 1 for Artificial Intelligence for Energy Informatics at University of Oslo (UiO) Autumn 2023.
 
+![project6](https://github.com/f-krause/drl_smartgrid/assets/93521294/1ccc8ca8-ec35-4e84-acfb-184e66414977)
 
 ## Setup
 ### Environment setup
